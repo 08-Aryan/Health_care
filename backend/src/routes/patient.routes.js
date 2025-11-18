@@ -1,24 +1,24 @@
-const express = require('express');
+import express from "express";
+import {
+  createPatient,
+  getAllPatients,
+  getPatientById,
+  updatePatient,
+  deletePatient
+} from "../controllers/patient.controller.js";
+
+import auth from "../middlewares/auth.js";
+
 const router = express.Router();
 
-const {
-    createPatient,
-    getAllPatients,
-    getPatientById,
-    updatePatient,
-    deletePatient
-} = require('../controllers/patient.controller');
-
-const { protect } = require('../middlewares/auth.middleware');
-
 // Protected Patient Routes
-router.route('/')
-    .post(protect, createPatient)
-    .get(protect, getAllPatients);
+router.route("/")
+  .post(auth, createPatient)
+  .get(auth, getAllPatients);
 
-router.route('/:id')
-    .get(protect, getPatientById)
-    .put(protect, updatePatient)
-    .delete(protect, deletePatient);
+router.route("/:id")
+  .get(auth, getPatientById)
+  .put(auth, updatePatient)
+  .delete(auth, deletePatient);
 
-module.exports = router;
+export default router;

@@ -1,8 +1,7 @@
-// src/controllers/goal.controller.js
+import Goal from "../models/Goal.js";
 
-const Goal = require("../models/Goal");
-
-exports.addGoal = async (req, res) => {
+// ADD goal
+export const addGoal = async (req, res) => {
   try {
     const { steps, waterIntake, sleepHours } = req.body;
 
@@ -26,7 +25,8 @@ exports.addGoal = async (req, res) => {
   }
 };
 
-exports.getGoals = async (req, res) => {
+// GET patient’s own goals
+export const getGoals = async (req, res) => {
   try {
     const goals = await Goal.find({ patientId: req.user.id }).sort({
       createdAt: -1,
@@ -39,7 +39,8 @@ exports.getGoals = async (req, res) => {
   }
 };
 
-exports.getGoalsByPatientId = async (req, res) => {
+// GET goals by patientId (provider use)
+export const getGoalsByPatientId = async (req, res) => {
   try {
     const { patientId } = req.params;
 

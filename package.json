@@ -1,0 +1,22 @@
+{
+  "name": "healthcare",
+  "version": "1.0.0",
+  "description": "This project is a **Healthcare Wellness Portal** designed for both **patients** and **healthcare providers**. It helps users track wellness goals (steps, sleep, active time), view reminders, access public health information, and offers a provider dashboard to monitor patient compliance.",
+  "main": "index.js",
+  "scripts": {
+    
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/08-Aryan/Health_care.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/08-Aryan/Health_care/issues"
+  },
+  "homepage": "https://github.com/08-Aryan/Health_care#readme"
+}

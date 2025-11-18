@@ -1,10 +1,9 @@
-// src/controllers/patient.controller.js
+import User from "../models/User.js";
+import Goal from "../models/Goal.js";
+import Reminder from "../models/Reminder.js";
 
-const User = require("../models/User");
-const Goal = require("../models/Goal");
-const Reminder = require("../models/Reminder");
-
-exports.getDashboard = async (req, res) => {
+// GET Patient Dashboard
+export const getDashboard = async (req, res) => {
   try {
     const userId = req.user.id;
 
@@ -22,7 +21,7 @@ exports.getDashboard = async (req, res) => {
       "Drink at least 2L of water today.",
       "Take a short walk to refresh your mind.",
       "Get 7-8 hours of sleep for better recovery.",
-      "Include a fruit in your next meal.",
+      "Include a fruit in your next meal."
     ];
 
     const randomTip = healthTips[Math.floor(Math.random() * healthTips.length)];
@@ -40,7 +39,8 @@ exports.getDashboard = async (req, res) => {
   }
 };
 
-exports.getProfile = async (req, res) => {
+// GET Patient Profile
+export const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     return res.json({ success: true, profile: user });
@@ -50,7 +50,8 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-exports.updateProfile = async (req, res) => {
+// UPDATE Patient Profile
+export const updateProfile = async (req, res) => {
   try {
     const allowedFields = ["name", "allergies", "medications", "age", "gender"];
     const updates = {};

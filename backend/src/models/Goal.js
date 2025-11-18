@@ -1,6 +1,4 @@
-// src/models/Goal.js
-
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const GoalSchema = new mongoose.Schema(
   {
@@ -42,7 +40,7 @@ const GoalSchema = new mongoose.Schema(
   }
 );
 
-// Auto compute "isMet" (optional feature)
+// Auto compute "isMet"
 GoalSchema.pre("save", function (next) {
   const hasGoal =
     (this.steps && this.steps > 0) ||
@@ -56,4 +54,4 @@ GoalSchema.pre("save", function (next) {
   next();
 });
 
-module.exports = mongoose.model("Goal", GoalSchema);
+export default mongoose.model("Goal", GoalSchema);
