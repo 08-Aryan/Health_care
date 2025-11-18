@@ -1,24 +1,21 @@
 import express from "express";
 import {
-  createPatient,
-  getAllPatients,
-  getPatientById,
-  updatePatient,
-  deletePatient
+  getDashboard,
+  getProfile,
+  updateProfile
 } from "../controllers/patient.controller.js";
 
 import auth from "../middlewares/auth.js";
+import rbac from "../middlewares/rbac.js";
 
 const router = express.Router();
 
-// Protected Patient Routes
-router.route("/")
-  .post(auth, createPatient)
-  .get(auth, getAllPatients);
+// Patient Dashboard
+router.get("/dashboard", auth, rbac("patient"), getDashboard);
 
-router.route("/:id")
-  .get(auth, getPatientById)
-  .put(auth, updatePatient)
-  .delete(auth, deletePatient);
+// Patient Profile
+router.route("/profile")
+  .get(auth, rbac("patient"), getProfile)
+  .put(auth, rbac("patient"), updateProfile);
 
 export default router;

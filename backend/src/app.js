@@ -8,7 +8,7 @@ import errorHandler from "./middlewares/errorHandler.js";
 import authRoutes from "./routes/auth.routes.js";
 import patientRoutes from "./routes/patient.routes.js";
 import providerRoutes from "./routes/provider.routes.js";
-//import goalRoutes from "./routes/goal.routes.js";
+import goalRoutes from "./routes/goal.routes.js";
 import reminderRoutes from "./routes/reminder.routes.js";
 import publicRoutes from "./routes/public.routes.js";
 

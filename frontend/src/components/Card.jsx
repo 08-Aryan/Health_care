@@ -1,15 +1,14 @@
 import React from "react";
-import Card from "../components/Card";
-import { FaWalking } from "react-icons/fa";
 
-export default function DashboardWidgets() {
+const Card = ({ title, value, icon, children }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-6">
-      <Card title="Steps Today" value={10234} icon={<FaWalking />} />
-      <Card title="Water Intake" value="6 cups" />
-      <Card title="Health Tip">
-        <p>Drink more water & take a walk today 🚶‍♂️</p>
-      </Card>
+    <div className="p-4 bg-white shadow-md rounded-lg border border-gray-200 hover:shadow-lg transition">
+      {icon && <div className="mb-2 text-2xl text-blue-600">{icon}</div>}
+      {title && <h3 className="text-sm font-semibold text-gray-700 mb-2">{title}</h3>}
+      {value && <p className="text-2xl font-bold text-gray-900">{value}</p>}
+      {children && <div>{children}</div>}
     </div>
   );
-}
+};
+
+export default Card;

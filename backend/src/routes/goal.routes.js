@@ -1,24 +1,21 @@
-const express = require('express');
+import express from 'express';
+import { 
+    addGoal, 
+    getGoals, 
+    getGoalsByPatientId
+} from '../controllers/goal.controller.js'; 
+
+import auth from '../middlewares/auth.js';
+import rbac from '../middlewares/rbac.js';
+
 const router = express.Router();
-
-const {
-    createGoal,
-    getGoals,
-    getGoalById,
-    updateGoal,
-    deleteGoal
-} = require('../controllers/goal.controller');
-
-const { protect } = require('../middlewares/auth.middleware');
 
 // Protected Goal Routes
 router.route('/')
-    .post(protect, createGoal)
-    .get(protect, getGoals);
+    .post(auth, rbac("patient"), addGoal)
+    .get(auth, getGoals);
 
-router.route('/:id')
-    .get(protect, getGoalById)
-    .put(protect, updateGoal)
-    .delete(protect, deleteGoal);
+// Provider can get goals by patient ID
+router.get('/patient/:patientId', auth, rbac("provider"), getGoalsByPatientId);
 
-module.exports = router;
+export default router;
