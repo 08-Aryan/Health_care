@@ -1,69 +1,86 @@
 import Reminder from "../models/Reminder.js";
 
-// CREATE reminder
+/**
+ * Get all reminders for a specific patient
+ * @route GET /api/reminders
+ * @access Private (patient)
+ */
+export const getReminders = async (req, res) => {
+  try {
+    const reminders = await Reminder.find({ patient: req.user._id }).sort({ date: 1 });
+    res.status(200).json(reminders);
+  } catch (err) {
+    console.error("Get Reminders Error:", err.message);
+    res.status(500).json({ message: "Server error fetching reminders" });
+  }
+};
+
+/**
+ * Create a new reminder
+ * @route POST /api/reminders
+ * @access Private (patient)
+ */
 export const createReminder = async (req, res) => {
   try {
-    const { title, date, description } = req.body;
+    const { title, description, date } = req.body;
 
     if (!title || !date) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "Title and date are required" 
-      });
+      return res.status(400).json({ message: "Title and date are required" });
     }
 
     const reminder = await Reminder.create({
-      patientId: req.user.id,
+      patient: req.user._id,
       title,
-      date,
       description,
+      date,
     });
 
-    return res.status(201).json({ success: true, reminder });
+    res.status(201).json(reminder);
   } catch (err) {
-    console.error("Create reminder error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("Create Reminder Error:", err.message);
+    res.status(500).json({ message: "Server error creating reminder" });
   }
 };
 
-// GET reminders for logged-in patient
-export const getReminders = async (req, res) => {
+/**
+ * Update a reminder
+ * @route PUT /api/reminders/:id
+ * @access Private (patient)
+ */
+export const updateReminder = async (req, res) => {
   try {
-    const reminders = await Reminder.find({ patientId: req.user.id })
-      .sort({ date: 1 });
-
-    return res.json({ success: true, reminders });
-  } catch (err) {
-    console.error("Get reminders error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-};
-
-// DELETE reminder
-export const deleteReminder = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const reminder = await Reminder.findOne({ 
-      _id: id, 
-      patientId: req.user.id 
-    });
+    const reminder = await Reminder.findOne({ _id: req.params.id, patient: req.user._id });
 
     if (!reminder) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Reminder not found" 
-      });
+      return res.status(404).json({ message: "Reminder not found" });
     }
 
-    await Reminder.findByIdAndDelete(id);
+    Object.assign(reminder, req.body);
+    await reminder.save();
 
-    return res.json({ 
-      success: true, 
-      message: "Reminder deleted successfully" 
-    });
+    res.status(200).json(reminder);
   } catch (err) {
-    console.error("Delete reminder error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("Update Reminder Error:", err.message);
+    res.status(500).json({ message: "Server error updating reminder" });
+  }
+};
+
+/**
+ * Delete a reminder
+ * @route DELETE /api/reminders/:id
+ * @access Private (patient)
+ */
+export const deleteReminder = async (req, res) => {
+  try {
+    const reminder = await Reminder.findOneAndDelete({ _id: req.params.id, patient: req.user._id });
+
+    if (!reminder) {
+      return res.status(404).json({ message: "Reminder not found" });
+    }
+
+    res.status(200).json({ message: "Reminder deleted successfully" });
+  } catch (err) {
+    console.error("Delete Reminder Error:", err.message);
+    res.status(500).json({ message: "Server error deleting reminder" });
   }
 };
