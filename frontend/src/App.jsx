@@ -11,7 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PatientDashboard from "./pages/PatientDashboard";
 import ProviderDashboard from "./pages/ProviderDashboard";
 import ProviderPatientDetails from "./pages/ProviderPatientDetails";
-//import Profile from "./pages/Profile";
+import Profile from "./pages/Profile";
 import Goals from "./pages/Goals";
 import PublicHealthInfo from "./pages/PublicHealthInfo";
 import PrivacyPolicy from "./pages/PrivacyPolicy";

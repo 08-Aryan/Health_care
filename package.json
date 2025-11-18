@@ -4,7 +4,12 @@
   "description": "This project is a **Healthcare Wellness Portal** designed for both **patients** and **healthcare providers**. It helps users track wellness goals (steps, sleep, active time), view reminders, access public health information, and offers a provider dashboard to monitor patient compliance.",
   "main": "index.js",
   "scripts": {
-    
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "start:backend": "cd backend && npm start",
+    "build:frontend": "cd frontend && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
