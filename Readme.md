@@ -301,14 +301,8 @@ This solution is built for rapid development, secure handling of user data, and 
 ### Database
 
 * MongoDB Atlas → free cluster
-* IP Whitelisting → “Allow from anywhere” for hackathon
 
----
 
-# 🙌 **Final Notes**
 
-* Built with modular architecture for clarity & scalability
-* Follows modern best practices (JWT, RBAC, HTTPS, NoSQL design)
-* Ready for demo, deployment, or extension
 
 
