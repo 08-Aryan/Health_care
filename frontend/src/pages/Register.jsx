@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { authApi } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -45,11 +46,13 @@ const Register = () => {
 
       await authApi.register(payload);
 
-      setSuccess("Account created successfully! Redirecting...");
-      setTimeout(() => navigate("/login"), 1500);
+      toast.success("Account created successfully. Redirecting to login...");
+      setTimeout(() => navigate("/login"), 1200);
 
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      const msg = err.response?.data?.message || "Registration failed";
+      setError(msg);
+      toast.error(msg);
     }
   };
 

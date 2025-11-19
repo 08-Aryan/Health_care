@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -28,8 +29,11 @@ const Login = () => {
       if (res.user.role === "patient") navigate("/patient/dashboard");
       else navigate("/provider/dashboard");
 
+      toast.success("Logged in successfully");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      const msg = err.response?.data?.message || "Login failed";
+      setError(msg);
+      toast.error(msg);
     }
   };
 

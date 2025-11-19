@@ -1,5 +1,20 @@
 import { useState, useEffect } from "react";
 import { getGoals, createGoal, deleteGoal } from "../api/goalApi";
+import toast from "react-hot-toast";
+
+// Chart.js
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function Goals() {
   const [goals, setGoals] = useState([]);
@@ -23,7 +38,9 @@ export default function Goals() {
       const res = await getGoals();
       setGoals(res.goals || []);
     } catch (err) {
-      setError("Failed to load goals");
+      const msg = "Failed to load goals";
+      setError(msg);
+      toast.error(msg);
       console.error("Goals fetch error:", err);
     } finally {
       setLoading(false);
@@ -48,13 +65,15 @@ export default function Goals() {
     try {
       const res = await createGoal(form);
       if (res.success) {
-        setSuccess("Goal created successfully!");
+        toast.success("Goal created successfully!");
         setForm({ steps: "", waterIntake: "", sleepHours: "" });
         setShowForm(false);
         fetchGoals();
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create goal");
+      const msg = err.response?.data?.message || "Failed to create goal";
+      setError(msg);
+      toast.error(msg);
       console.error("Create goal error:", err);
     }
   };
@@ -64,11 +83,13 @@ export default function Goals() {
       try {
         const res = await deleteGoal(goalId);
         if (res.success) {
-          setSuccess("Goal deleted!");
+          toast.success("Goal deleted!");
           fetchGoals();
         }
       } catch (err) {
-        setError("Failed to delete goal");
+        const msg = "Failed to delete goal";
+        setError(msg);
+        toast.error(msg);
         console.error("Delete goal error:", err);
       }
     }
@@ -174,41 +195,65 @@ export default function Goals() {
           <p className="text-lg">No goals yet. Create one to get started! 🎯</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {goals.map((goal) => (
-            <div key={goal._id} className="bg-white p-6 rounded-xl shadow border border-gray-200 hover:shadow-lg transition">
-              <div className="space-y-3">
-                {goal.steps > 0 && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700 font-medium">Daily Steps</span>
-                    <span className="text-2xl font-bold text-blue-600">{goal.steps}</span>
-                  </div>
-                )}
-                {goal.waterIntake > 0 && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700 font-medium">Water Intake</span>
-                    <span className="text-2xl font-bold text-blue-600">{goal.waterIntake}L</span>
-                  </div>
-                )}
-                {goal.sleepHours > 0 && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700 font-medium">Sleep Hours</span>
-                    <span className="text-2xl font-bold text-blue-600">{goal.sleepHours}h</span>
-                  </div>
-                )}
+        <>
+          {/* Chart showing recent goals (steps) */}
+          <div className="bg-white p-4 rounded-xl shadow mb-6">
+            <h2 className="text-lg font-semibold mb-3">Recent Goal Progress (Steps)</h2>
+            <Bar
+              data={{
+                labels: goals.map((g) => new Date(g.createdAt).toLocaleDateString()),
+                datasets: [
+                  {
+                    label: "Steps",
+                    data: goals.map((g) => g.steps || 0),
+                    backgroundColor: "rgba(37, 99, 235, 0.7)",
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } },
+              }}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {goals.map((goal) => (
+              <div key={goal._id} className="bg-white p-6 rounded-xl shadow border border-gray-200 hover:shadow-lg transition">
+                <div className="space-y-3">
+                  {goal.steps > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-700 font-medium">Daily Steps</span>
+                      <span className="text-2xl font-bold text-blue-600">{goal.steps}</span>
+                    </div>
+                  )}
+                  {goal.waterIntake > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-700 font-medium">Water Intake</span>
+                      <span className="text-2xl font-bold text-blue-600">{goal.waterIntake}L</span>
+                    </div>
+                  )}
+                  {goal.sleepHours > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-700 font-medium">Sleep Hours</span>
+                      <span className="text-2xl font-bold text-blue-600">{goal.sleepHours}h</span>
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 mt-3">
+                  Created {new Date(goal.createdAt).toLocaleDateString()}
+                </p>
+                <button
+                  onClick={() => handleDelete(goal._id)}
+                  className="mt-4 w-full bg-red-100 hover:bg-red-200 text-red-600 py-2 rounded-lg font-medium transition"
+                >
+                  Delete Goal
+                </button>
               </div>
-              <p className="text-xs text-gray-500 mt-3">
-                Created {new Date(goal.createdAt).toLocaleDateString()}
-              </p>
-              <button
-                onClick={() => handleDelete(goal._id)}
-                className="mt-4 w-full bg-red-100 hover:bg-red-200 text-red-600 py-2 rounded-lg font-medium transition"
-              >
-                Delete Goal
-              </button>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

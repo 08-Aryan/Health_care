@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider";
+import NavBar from "./components/NavBar";
+import Layout from "./components/Layout";
 
 
 // Auth pages (Dev1)
@@ -20,7 +22,9 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Routes>
+        <NavBar />
+        <Layout>
+          <Routes>
 
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
@@ -77,9 +81,10 @@ function App() {
           />
 
           {/* Default Route */}
+          <Route path="/" element={<Login />} />
           <Route path="*" element={<Login />} />
-
-        </Routes>
+          </Routes>
+        </Layout>
       </Router>
     </AuthProvider>
   );
